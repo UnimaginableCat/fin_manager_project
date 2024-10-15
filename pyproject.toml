@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "core-app"
+version = "0.1.0"
+description = ""
+authors = ["unimaginablecat <monkok111@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+psycopg2 = "^2.9.9"
+django = "^5.1.2"
+djangorestframework = "^3.15.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+mypy = "^1.12.0"
+ruff = "^0.6.9"
+
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+lint.select = ["E", "F", "W", "C90"]
+
+exclude = [
+    "fin_management_app/settings.py",
+    "fin_management_app/asgi.py",
+    "fin_management_app/wsgi.py",
+    "fin_management_app/manage.py",
+    "fin_management_app/start_script.py",
+]
+
+lint.ignore = ["E501", "F401"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start_script = "start_script:main"
+
+#[tool.pytest.ini_options]
+#DJANGO_SETTINGS_MODULE = "fin_management_app2.config.settings"
