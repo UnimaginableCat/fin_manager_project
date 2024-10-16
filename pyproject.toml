@@ -9,6 +9,7 @@ python = "^3.12"
 psycopg2 = "^2.9.9"
 django = "^5.1.2"
 djangorestframework = "^3.15.2"
+pytest-django = "^4.9.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -23,11 +24,11 @@ line-length = 88
 lint.select = ["E", "F", "W", "C90"]
 
 exclude = [
-    "fin_management_app/settings.py",
-    "fin_management_app/asgi.py",
-    "fin_management_app/wsgi.py",
-    "fin_management_app/manage.py",
-    "fin_management_app/start_script.py",
+    "core_app/settings.py",
+    "core_app/asgi.py",
+    "core_app/wsgi.py",
+    "core_app/manage.py",
+    "core_app/start_script.py",
 ]
 
 lint.ignore = ["E501", "F401"]
@@ -39,5 +40,5 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start_script = "start_script:main"
 
-#[tool.pytest.ini_options]
-#DJANGO_SETTINGS_MODULE = "fin_management_app2.config.settings"
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "core_app.settings"
