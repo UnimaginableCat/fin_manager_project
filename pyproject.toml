@@ -24,15 +24,14 @@ ruff = "^0.6.9"
 target-version = "py312"
 line-length = 88
 lint.select = ["E", "F", "W", "C90"]
-
 exclude = [
     "core_app/settings.py",
     "core_app/asgi.py",
     "core_app/wsgi.py",
-    "core_app/manage.py",
-    "core_app/start_script.py",
+    "manage.py",
+    "start_script.py",
+    "users_app/migrations",
 ]
-
 lint.ignore = ["E501", "F401"]
 
 [build-system]

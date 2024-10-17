@@ -14,10 +14,11 @@ def main():
 
     run_command("poetry run ruff check .", "Ruff")
     run_command("poetry run mypy .", "Mypy")
-    run_command("poetry run pytest", "Pytest")
 
     run_command("poetry run python manage.py makemigrations", "Database makemigrations")
     run_command("poetry run python manage.py migrate", "Database Migration")
+
+    run_command("poetry run pytest", "Pytest")
 
     run_command("poetry run python manage.py runserver", "Django Server")
 

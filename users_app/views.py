@@ -110,11 +110,11 @@ class UserDetailsView(APIView):
         try:
             serializer = UserSerializer(data=request.data, partial=True)
             if serializer.is_valid():
-                user = UserServiceImpl.update_existing_user(
+                UserServiceImpl.update_existing_user(
                     user_id=id,
                     **serializer.validated_data
                 )
-                return Response(UserSerializer(user).data)
+                return Response({"detail": "User updated"}, status=status.HTTP_200_OK)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except ObjectDoesNotExist:
