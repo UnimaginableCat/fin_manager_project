@@ -66,7 +66,7 @@ def test_update_existing_user(mock_user_objects: MagicMock, mock_user_save: Magi
                                        last_name=user_entity.last_name,
                                        email=user_entity.email)
 
-    result = UserServiceImpl.update_existing_user(user_id, updated_name, user_data['last_name'], user_data['email'])
+    result = UserServiceImpl.update_existing_user(user_id, first_name=updated_name)
 
     mock_user_objects.get.assert_called_once_with(id=user_id)
     mock_user_save.assert_called_once()
@@ -85,9 +85,9 @@ def test_update_existing_user_not_found(mock_user_objects: MagicMock, user_entit
 
     with pytest.raises(ObjectDoesNotExist):
         UserServiceImpl.update_existing_user(user_entity.id,
-                                             user_entity.first_name,
-                                             user_entity.last_name,
-                                             user_entity.email)
+                                             first_name = user_entity.first_name,
+                                             last_name = user_entity.last_name,
+                                             email = user_entity.email)
 
     mock_user_objects.get.assert_called_once_with(id=user_entity.id)
 

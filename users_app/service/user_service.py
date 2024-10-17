@@ -24,13 +24,10 @@ class UserService(ABC):
 
     @staticmethod
     @abstractmethod
-    def update_existing_user(user_id: uuid.UUID, first_name: str, last_name: str, email: str) -> User:
+    def update_existing_user(user_id: uuid.UUID, **kwargs: dict[str, str]) -> User:
         """
         Function that updates an existing user
         :param user_id:  id
-        :param first_name: user first name
-        :param last_name:  user last name
-        :param email: user email
         :return: updated user
         """
         pass

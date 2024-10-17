@@ -17,12 +17,12 @@ class UserServiceImpl(UserService):
         return user
 
     @staticmethod
-    def update_existing_user(user_id: uuid.UUID, first_name: str, last_name: str, email: str) -> User:
+    def update_existing_user(user_id: uuid.UUID, **kwargs: dict[str, str]) -> User:
         UserServiceImpl.logger.info(f"Updating user with id: {user_id}")
         user = User.objects.get(id=user_id)
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
+        for attr, value in kwargs.items():
+            if hasattr(user, attr):
+                setattr(user, attr, value)
         user = user.save()
         return user
 
