@@ -16,7 +16,6 @@ ENV/
 # pipenv, poetry
 Pipfile
 Pipfile.lock
-poetry.lock
 
 # Pyre type checker
 .pyre/
