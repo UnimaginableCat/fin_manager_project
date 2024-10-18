@@ -3,6 +3,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from export_app.views import ExportTransactionsCSVView, ExportReportsCSVView
 from reports_app.views import ReportListView, ReportDetailsView
 from transactions_app.views import TransactionListView, TransactionDetailsView
 from users_app.views import UserListView, UserDetailsView
@@ -34,5 +35,7 @@ urlpatterns = [
     path('transactions/<uuid:id>/', TransactionDetailsView.as_view(), name='transaction-detail'),
     path('reports', ReportListView.as_view(), name='reports'),
     path('reports/<uuid:id>/', ReportDetailsView.as_view(), name='report-detail'),
+    path('export/transactions', ExportTransactionsCSVView.as_view(), name='export-transactions'),
+    path('export/reports', ExportReportsCSVView.as_view(), name='export-reports'),
 
 ]

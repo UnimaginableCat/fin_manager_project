@@ -118,3 +118,4 @@ Desktop.ini
 
 # pytest cache
 .pytest_cache/
+.env

@@ -6,9 +6,6 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 import pytest
-from unicodedata import category
-
-from reports_app.models import TransactionReport
 from transactions_app.models import Transaction
 from users_app.models import User
 
@@ -20,7 +17,6 @@ def api_client():
 
 @pytest.fixture
 def user():
-    """Fixture to create a test user."""
     return User.objects.create(id=uuid.uuid4(), first_name="John", last_name="Doe", email="john@example.com")
 
 
@@ -77,6 +73,7 @@ def test_create_report_success(api_client, report_request, user):
     assert Decimal(response.data['total_expense']) == 500.0
     assert Decimal(response.data['net_income']) == 2500.0
 
+
 @pytest.mark.django_db
 def test_create_report_invalid_dates(api_client):
     """
@@ -97,3 +94,4 @@ def test_create_report_invalid_dates(api_client):
     response = api_client.post(url, invalid_data, format='json')
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
+

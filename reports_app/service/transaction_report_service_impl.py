@@ -13,24 +13,31 @@ class TransactionReportServiceImpl(TransactionReportService):
     @staticmethod
     def create_report(start_date: datetime.date, end_date: datetime.date) -> TransactionReport:
         transactions = Transaction.objects.filter(date__range=[start_date, end_date])
-        total_income = transactions.filter(transaction_type='income').aggregate(Sum('amount'))
-        total_expense = transactions.filter(transaction_type='expense').aggregate(Sum('amount'))
 
-        transaction_report = TransactionReport(start_date=start_date,
-                                               end_date=end_date,
-                                               total_income=total_income['amount__sum'],
-                                               total_expense=total_expense['amount__sum'],
-                                               net_income=total_income['amount__sum'] - total_expense['amount__sum'])
+        if not transactions.exists():
+            transaction_report = TransactionReport(start_date=start_date,
+                                                   end_date=end_date,
+                                                   total_income=0.0,
+                                                   total_expense=0.0,
+                                                   net_income=0.0)
+        else:
+            total_income = transactions.filter(transaction_type='income').aggregate(Sum('amount'))
+            total_expense = transactions.filter(transaction_type='expense').aggregate(Sum('amount'))
+
+            transaction_report = TransactionReport(start_date=start_date,
+                                                   end_date=end_date,
+                                                   total_income=total_income['amount__sum'],
+                                                   total_expense=total_expense['amount__sum'],
+                                                   net_income=total_income['amount__sum'] - total_expense[
+                                                       'amount__sum'])
 
         transaction_report.save()
         return transaction_report
-
 
     @staticmethod
     def get_report_by_id(id: uuid.UUID) -> TransactionReport:
         transaction_report = TransactionReport.objects.get(id=id)
         return transaction_report
-
 
     @staticmethod
     def get_all_reports() -> List[TransactionReport]:
