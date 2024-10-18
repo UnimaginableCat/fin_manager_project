@@ -23,7 +23,7 @@ class TransactionServiceImpl(TransactionService):
             date=date
         )
 
-        transaction = transaction.save()
+        transaction.save()
         return transaction
 
     @staticmethod
@@ -33,7 +33,7 @@ class TransactionServiceImpl(TransactionService):
         for attr, value in kwargs.items():
             if hasattr(transaction, attr):
                 setattr(transaction, attr, value)
-        transaction = transaction.save()
+        transaction.save()
         return transaction
 
     @staticmethod

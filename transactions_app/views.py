@@ -125,7 +125,7 @@ class TransactionDetailsView(APIView):
         and updates the transaction through the `TransactionServiceImpl`. If the transaction is not found,
         a 404 error is returned.
         """
-        serializer = TransactionSerializer(data=request.data)
+        serializer = TransactionSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             try:
                 TransactionServiceImpl.update_transaction(id, **serializer.validated_data)

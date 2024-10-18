@@ -9,7 +9,7 @@ from users_app.service.user_service_impl import UserServiceImpl
 
 
 @pytest.fixture
-def user_data():
+def request_data():
     return {
         "first_name": "John",
         "last_name": "Doe",
@@ -23,20 +23,21 @@ def user_entity() -> User:
 
 
 @mock.patch.object(User, "save")
-def test_save_new_user(mock_user_save: MagicMock, user_data, user_entity):
+def test_save_new_user(mock_user_save: MagicMock, request_data, user_entity):
     """Test saving a new user successfully.
 
     This test mocks the save method of the User model and asserts that
     the method is called once when saving a new user.
     """
-    mock_user_save.return_value = user_entity
-    result = UserServiceImpl.save_new_user(user_data['first_name'], user_data['last_name'], user_data['email'])
+    result = UserServiceImpl.save_new_user(request_data['first_name'],
+                                           request_data['last_name'],
+                                           request_data['email'])
     mock_user_save.assert_called_once()
-    assert result == mock_user_save.return_value
+    assert result.first_name == request_data['first_name']
 
 
 @mock.patch.object(User, "save")
-def test_save_new_user_fail(mock_user_save: MagicMock, user_data):
+def test_save_new_user_fail(mock_user_save: MagicMock, request_data):
     """Test saving a new user fails due to a database error.
 
     This test mocks the save method to raise an exception and checks
@@ -44,13 +45,13 @@ def test_save_new_user_fail(mock_user_save: MagicMock, user_data):
     """
     mock_user_save.side_effect = Exception("Database error")
     with pytest.raises(Exception, match="Database error"):
-        UserServiceImpl.save_new_user(user_data['first_name'], user_data['last_name'], user_data['email'])
+        UserServiceImpl.save_new_user(request_data['first_name'], request_data['last_name'], request_data['email'])
     mock_user_save.assert_called_once()
 
 
 @mock.patch.object(User, "save")
 @mock.patch.object(User, "objects")
-def test_update_existing_user(mock_user_objects: MagicMock, mock_user_save: MagicMock, user_data, user_entity):
+def test_update_existing_user(mock_user_objects: MagicMock, mock_user_save: MagicMock, request_data, user_entity):
     """Test updating an existing user successfully.
 
     This test checks that the update_existing_user method calls the
@@ -61,10 +62,6 @@ def test_update_existing_user(mock_user_objects: MagicMock, mock_user_save: Magi
     user_id = user_entity.id
 
     mock_user_objects.get.return_value = user_entity
-    mock_user_save.return_value = User(id=user_entity.id,
-                                       first_name=updated_name,
-                                       last_name=user_entity.last_name,
-                                       email=user_entity.email)
 
     result = UserServiceImpl.update_existing_user(user_id, first_name=updated_name)
 

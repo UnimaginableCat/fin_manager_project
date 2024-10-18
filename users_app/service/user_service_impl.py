@@ -13,7 +13,7 @@ class UserServiceImpl(UserService):
     def save_new_user(first_name: str, last_name: str, email: str) -> User:
         UserServiceImpl.logger.info(f"Saving new user with email: {email}")
         user = User(first_name=first_name, last_name=last_name, email=email)
-        user = user.save()
+        user.save()
         return user
 
     @staticmethod
@@ -23,7 +23,7 @@ class UserServiceImpl(UserService):
         for attr, value in kwargs.items():
             if hasattr(user, attr):
                 setattr(user, attr, value)
-        user = user.save()
+        user.save()
         return user
 
     @staticmethod

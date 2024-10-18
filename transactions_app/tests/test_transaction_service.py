@@ -10,7 +10,7 @@ from users_app.service.user_service_impl import UserServiceImpl
 
 
 @pytest.fixture
-def transaction_data():
+def request_data():
     return {
         "user_id": uuid.uuid4(),
         "amount": 100.0,
@@ -31,6 +31,7 @@ def transaction_entity() -> Transaction:
         date="2024-01-01"
     )
 
+
 @pytest.fixture
 def user_entity() -> User:
     return User(
@@ -44,22 +45,27 @@ def user_entity() -> User:
 
 @mock.patch.object(UserServiceImpl, "get_user_by_id")
 @mock.patch.object(Transaction, "save")
-def test_create_transaction(mock_transaction_save: MagicMock, mock_user_service: MagicMock, user_entity, transaction_data, transaction_entity):
+def test_create_transaction(mock_transaction_save: MagicMock,
+                            mock_user_service: MagicMock,
+                            user_entity,
+                            request_data,
+                            transaction_entity):
     """Test creating a new transaction successfully.
 
     This test mocks the save method of the Transaction model and asserts that
     the method is called once when saving a new transaction.
     """
-    transaction_entity.user_id = transaction_data['user_id']
-    mock_transaction_save.return_value = transaction_entity
+    transaction_entity.user_id = request_data['user_id']
     mock_user_service.return_value = user_entity
-    result = TransactionServiceImpl.create_transaction(**transaction_data)
+    result = TransactionServiceImpl.create_transaction(**request_data)
     mock_transaction_save.assert_called_once()
-    assert result == mock_transaction_save.return_value
+    assert result.amount == request_data['amount']
+
 
 @mock.patch.object(UserServiceImpl, "get_user_by_id")
 @mock.patch.object(Transaction, "save")
-def test_create_transaction_fail(mock_transaction_save: MagicMock, mock_user_service: MagicMock, transaction_data, user_entity):
+def test_create_transaction_fail(mock_transaction_save: MagicMock, mock_user_service: MagicMock, request_data,
+                                 user_entity):
     """Test creating a new transaction fails due to a database error.
 
     This test mocks the save method to raise an exception and checks
@@ -68,13 +74,15 @@ def test_create_transaction_fail(mock_transaction_save: MagicMock, mock_user_ser
     mock_user_service.return_value = user_entity
     mock_transaction_save.side_effect = Exception("Database error")
     with pytest.raises(Exception, match="Database error"):
-        TransactionServiceImpl.create_transaction(**transaction_data)
+        TransactionServiceImpl.create_transaction(**request_data)
     mock_transaction_save.assert_called_once()
 
 
 @mock.patch.object(Transaction, "save")
 @mock.patch.object(Transaction, "objects")
-def test_update_transaction(mock_transaction_objects: MagicMock, mock_transaction_save: MagicMock, transaction_data,
+def test_update_transaction(mock_transaction_objects: MagicMock,
+                            mock_transaction_save: MagicMock,
+                            request_data,
                             transaction_entity):
     """Test updating an existing transaction successfully.
 
@@ -84,17 +92,9 @@ def test_update_transaction(mock_transaction_objects: MagicMock, mock_transactio
     """
     updated_amount = 200.0
     transaction_id = transaction_entity.id
-    transaction_entity.user_id = transaction_data['user_id']
+    transaction_entity.user_id = request_data['user_id']
 
     mock_transaction_objects.get.return_value = transaction_entity
-    mock_transaction_save.return_value = Transaction(
-        id=transaction_entity.id,
-        user_id=transaction_entity.user_id,
-        amount=updated_amount,
-        transaction_type=transaction_entity.transaction_type,
-        category=transaction_entity.category,
-        date=transaction_entity.date
-    )
 
     result = TransactionServiceImpl.update_transaction(transaction_id, amount=updated_amount)
 

@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'users_app',
-    'transactions_app'
+    'transactions_app',
+    'reports_app'
 ]
 
 MIDDLEWARE = [
